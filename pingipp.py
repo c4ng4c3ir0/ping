@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+import ipaddress
 
 def ping_ips(ips):
     for ip in ips:
@@ -22,7 +23,8 @@ args = parser.parse_args()
 
 # Verificar se o argumento -subnet foi fornecido
 if args.subnet:
-    subnet_ips = [args.subnet + '.' + str(i) for i in range(1, 255)]
+    subnet = ipaddress.IPv4Network(args.subnet, strict=False)
+    subnet_ips = [str(ip) for ip in subnet.hosts()]
     ips = subnet_ips
 elif args.ips:
     with open(args.ips, 'r') as ip_file:
